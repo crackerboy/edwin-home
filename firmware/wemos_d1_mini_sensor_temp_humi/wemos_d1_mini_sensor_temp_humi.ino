@@ -43,7 +43,7 @@ bool connectMQTT() {
   // mqtt (re)connexion
     while ( !mqtt.connected() ) {
       if (DEBUG) Serial.println("connecting MQTT");
-      if ( !mqtt.connect(MQTT_CLIENT_NAME,"mqtt_username","mqtt_password") ) {
+      if ( !mqtt.connect(MQTT_CLIENT_NAME,"mqtt_user","http_api_password") ) {
         retryCounter++;
         if (retryCounter > 3) {
           if (DEBUG) Serial.println("No MQTT connection. Will try tommorow");
@@ -61,7 +61,7 @@ void setup() {
   if (DEBUG) Serial.begin(9600);
 
   if (!connectWiFi()) {
-    ESP.deepSleep(PUBLISH_RATE * 1e6);  
+    goToSleep();  
   } else {
   
     // reading SHT30 sensors
@@ -78,7 +78,7 @@ void setup() {
     }
   
     if (!connectMQTT()) {
-      ESP.deepSleep(PUBLISH_RATE * 1e6);  
+      goToSleep();  
     } else {
   
       // publish to mqtt
@@ -90,9 +90,15 @@ void setup() {
         Serial.print(PUBLISH_RATE);
         Serial.print(" s");
       }
-      ESP.deepSleep(PUBLISH_RATE * 1e6);
+      goToSleep();
     }
   }
+}
+
+void goToSleep() {
+  if (WiFi.status() == WL_CONNECTED) WiFi.disconnect();
+  mqtt.disconnect();
+  ESP.deepSleep(PUBLISH_RATE * 1e6);  
 }
 
 // --- MAIN LOOP ---
