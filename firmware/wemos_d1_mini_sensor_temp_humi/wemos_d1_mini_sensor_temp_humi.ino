@@ -43,7 +43,7 @@ bool connectMQTT() {
   // mqtt (re)connexion
     while ( !mqtt.connected() ) {
       if (DEBUG) Serial.println("connecting MQTT");
-      if ( !mqtt.connect(MQTT_CLIENT_NAME,"homeassistant","7415963") ) {
+      if ( !mqtt.connect(MQTT_CLIENT_NAME,"mqtt_username","mqtt_password") ) {
         retryCounter++;
         if (retryCounter > 3) {
           if (DEBUG) Serial.println("No MQTT connection. Will try tommorow");
