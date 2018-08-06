@@ -13,7 +13,7 @@
 #define MQTT_TOPIC_TEMP     "sensor/d1mini01/temperature"
 #define MQTT_TOPIC_HUMID    "sensor/d1mini01/humidity"
 
-#define PUBLISH_RATE        15*60      // publishing rate in seconds
+#define PUBLISH_RATE        7*60      // publishing rate in seconds
 
 #define DEBUG               false      // debug to serial port
 
@@ -97,7 +97,7 @@ void setup() {
 
 void goToSleep() {
   if (WiFi.status() == WL_CONNECTED) WiFi.disconnect();
-  mqtt.disconnect();
+  if (mqtt.connected()) mqtt.disconnect();
   ESP.deepSleep(PUBLISH_RATE * 1e6);  
 }
 
