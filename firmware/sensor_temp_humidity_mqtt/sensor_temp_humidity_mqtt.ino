@@ -1,18 +1,24 @@
+//WiFi enabled MQTT temperature and humidity sensor based on Wemos D1 mini and STH30 shield.
+//v.1.1
+
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <WEMOS_SHT3X.h>
 
-#define WIFI_SSID           "XPEH"
-#define WIFI_PASSWORD       "givemetheslowinternet"
+#define WIFI_SSID           "SSID"
+#define WIFI_PASSWORD       "WiFi password"
 
 #define MQTT_SERVER         "192.168.2.197"
 #define MQTT_CLIENT_NAME    "d1mini01"
 #define MQTT_TOPIC_TEMP     "sensor/d1mini01/temperature"
 #define MQTT_TOPIC_HUMID    "sensor/d1mini01/humidity"
 
-#define PUBLISH_RATE        7*60      // deep sleep timer in seconds
+#define PUBLISH_RATE        10*60      // deep sleep timer in seconds
 
 #define DEBUG               false      // debug to serial port
+
+const char* mqtt_user = "user";
+const char* mqtt_password = "password";
 
 //Libraries initialization
 WiFiClient    wifi;
@@ -39,7 +45,7 @@ bool connectMQTT() {
   int retryCounter = 0;
     while ( !mqtt.connected() ) {
       if (DEBUG) Serial.println("connecting MQTT");
-      if ( !mqtt.connect(MQTT_CLIENT_NAME,"mqtt_user","http_api_password") ) {
+      if ( !mqtt.connect(MQTT_CLIENT_NAME,mqtt_user,mqtt_password) ) {
         retryCounter++;
         //Trying to connect 3 times
         if (retryCounter > 3) {
