@@ -1,5 +1,5 @@
 //WiFi enabled MQTT temperature and humidity sensor based on Wemos D1 mini and STH30 shield.
-//v.1.3
+//v.1.4
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
@@ -9,7 +9,7 @@
 #define WIFI_PASSWORD       "************"
 
 #define MQTT_SERVER         "192.168.2.197"
-#define MQTT_CLIENT_NAME    "edwin-ths.1.3"
+#define MQTT_CLIENT_NAME    "edwin-ths.1.4"
 #define MQTT_TOPIC_TEMP     "edwin/temphumisensor/temperature"
 #define MQTT_TOPIC_HUMID    "edwin/temphumisensor/humidity"
 #define MQTT_USER           "*********"
