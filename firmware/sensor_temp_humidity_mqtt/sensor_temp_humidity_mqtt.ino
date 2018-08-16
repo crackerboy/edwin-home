@@ -5,15 +5,15 @@
 #include <PubSubClient.h>
 #include <WEMOS_SHT3X.h>
 
-#define WIFI_SSID           "*****"
-#define WIFI_PASSWORD       "************"
+#define WIFI_SSID           "******"
+#define WIFI_PASSWORD       "******"
 
 #define MQTT_SERVER         "192.168.2.197"
 #define MQTT_CLIENT_NAME    "edwin-ths.1.4"
 #define MQTT_TOPIC_TEMP     "edwin/temphumisensor/temperature"
 #define MQTT_TOPIC_HUMID    "edwin/temphumisensor/humidity"
-#define MQTT_USER           "*********"
-#define MQTT_PASSWORD       "********"
+#define MQTT_USER           "******"
+#define MQTT_PASSWORD       "******"
 
 #define PUBLISH_RATE        10*60
 
