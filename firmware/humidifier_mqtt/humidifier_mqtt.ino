@@ -14,7 +14,6 @@ const char* topic = "edwin";
 const char* mqtt_user = "user";
 const char* mqtt_password = "password";
 
-long timeBetweenMessages = 1000 * 30 * 1;
 const int relayPin = D1;
 
 WiFiClient espClient;
@@ -133,13 +132,4 @@ void loop() {
     reconnect();
   }
   client.loop();
-
-  /*
-  long now = millis();
-  if (now - lastMsg > timeBetweenMessages ) {
-    lastMsg = now;
-    ++value;
-    sendStatus();
-  }
-  */
 }
