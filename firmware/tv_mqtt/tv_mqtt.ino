@@ -1,21 +1,23 @@
-//WiFi enabled MQTT hunidifier based on Wemos D1 mini and relay module.
+//WiFi enabled MQTT IR controler for an old Samsung TV
 //v.1.0
-
+#include <IRremoteESP8266.h>
+#include <IRsend.h>
+#include "samsung_ir_codes.h"
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
-#define MQTT_CLIENT_NAME    "humidifier"
-#define DEBUG               false
+#define MQTT_CLIENT_NAME    "kitchen_tv"
+#define DEBUG               true
+#define IR_LED D3
 
-const char* ssid = "SSID";
-const char* pswd = "WiFi password";
+const char* ssid = "******";
+const char* pswd = "***********";
 const char* mqtt_server = "192.168.2.197";
-const char* topic = "edwin";
-const char* mqtt_user = "user";
-const char* mqtt_password = "password";
+const char* topic = "some_topic";
+const char* mqtt_user = "*****";
+const char* mqtt_password = "****";
 
-const int relayPin = D1;
-
+IRsend irsend(IR_LED);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
@@ -42,26 +44,27 @@ void setup_wifi() {
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
+  String command = "";
+  for (int i = 0; i < length; i++) {
+    command +=(char)payload[i];
+  }
   if (DEBUG) {
     Serial.print("Message arrived [");
     Serial.print(topic);
     Serial.print("] ");
-    for (int i = 0; i < length; i++) {
-      Serial.print((char)payload[i]);
-    }
-    Serial.println();
+    Serial.println(command);
   }
 
-  if ((char)payload[0] == '1') {
-    digitalWrite(relayPin, HIGH);
-  } else {
-    digitalWrite(relayPin, LOW);
+  if (command == "Power") {
+    irsend.sendRaw(codePower, sizeof(codePower) / 2, 38);
+  } else if (command == "VolumeUp") {
+    irsend.sendRaw(codeVolumeUp, sizeof(codeVolumeUp) / 2, 38);
+  } else if (command == "VolumeDown") {
+    irsend.sendRaw(codeVolumeDown, sizeof(codeVolumeDown) / 2, 38);
   }
 
-  delay(500);
-  sendStatus();
+  
 }
-
 
 void reconnect() {
   while (!client.connected()) {
@@ -70,12 +73,12 @@ void reconnect() {
     if (client.connect(MQTT_CLIENT_NAME,mqtt_user,mqtt_password)) {
       if (DEBUG) Serial.println("connected");
       delay(200);
-      sendStatus();
+      sendState("online");
       String subscription;
       subscription += topic;
       subscription += "/";
       subscription += MQTT_CLIENT_NAME;
-      subscription += "/power";
+      subscription += "/com";
       client.subscribe(subscription.c_str() );
       if (DEBUG) {
        Serial.print("subscribed to : ");
@@ -94,22 +97,8 @@ void reconnect() {
   }
 }
 
-void setup() {
-  pinMode(relayPin, OUTPUT); 
-  if (DEBUG) Serial.begin(115200);
-  setup_wifi();
-  client.setServer(mqtt_server, 1883);
-  client.setCallback(callback);
-}
-
-void sendStatus() {
+void sendState(String state) {
   if (client.connected()) {
-    String payload = "";
-    if (digitalRead(relayPin) == HIGH) {
-      payload = "on";
-    } else {
-      payload = "off";
-    }
     String pubTopic;
      pubTopic += topic ;
      pubTopic += "/";
@@ -119,10 +108,18 @@ void sendStatus() {
       Serial.print("Publish topic: ");
       Serial.println(pubTopic);
       Serial.print("Publish message: ");
-      Serial.println(payload);
+      Serial.println(state);
      }
-    client.publish( (char*) pubTopic.c_str() , (char*) payload.c_str(), true );
+    client.publish( (char*) pubTopic.c_str() , (char*) state.c_str(), true );
   }  
+}
+
+void setup() {
+  irsend.begin();
+  if (DEBUG) Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
+  setup_wifi();
+  client.setServer(mqtt_server, 1883);
+  client.setCallback(callback);
 }
 
 void loop() {
