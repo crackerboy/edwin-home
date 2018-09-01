@@ -3,16 +3,19 @@
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include "edwin_secrets.h" //contains some private information
 
 #define MQTT_CLIENT_NAME    "humidifier"
 #define DEBUG               false
 
-const char* ssid = "SSID";
-const char* pswd = "WiFi password";
-const char* mqtt_server = "192.168.2.197";
+// All this variables declared in secrets.h
+//const char* ssid = "WiFi_Name";
+//const char* pswd = "mywifipassword";
+//const char* mqtt_server = "192.168.1.1";
+//const char* mqtt_user = "user";
+//const char* mqtt_password = "password";
+
 const char* topic = "edwin";
-const char* mqtt_user = "user";
-const char* mqtt_password = "password";
 
 const int relayPin = D1;
 
