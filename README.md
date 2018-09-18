@@ -1,1 +1,1 @@
-# See [edwin-home wiki](https://github.com/estevez-dev/edwin-home/wiki) for some info
+# See [Keyboard Crumbs Blog](https://blog.keyboardcrumbs.io/) for some info
