@@ -1,1 +1,1 @@
-# See [Keyboard Crumbs Blog](https://blog.keyboardcrumbs.io/) for some info
+# See [Keyboard Crumbs Blog](http://www.keyboardcrumbs.io/blog/) for some info
