@@ -1,1 +1,1 @@
-# See [Keyboard Crumbs Blog](http://www.keyboardcrumbs.io/blog/) for some info
+# See [somegeeky.website](https://somegeeky.website) for some info
