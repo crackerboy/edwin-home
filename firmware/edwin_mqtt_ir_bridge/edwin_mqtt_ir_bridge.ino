@@ -1,15 +1,15 @@
 //Edwin Bridge - MQTT <-> IR
-const char* firmwareVer = "1.0";
+const char* firmwareVer = "1.1";
 #include <base64.hpp>
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
 #include <IRutils.h>
 #include <ESP8266WiFi.h>
 #include "edwin_secrets.h" //contains some private information
-//MQTT_MAX_PACKET_SIZE in PubSubClient should be changed to 256
+//MQTT_MAX_PACKET_SIZE in PubSubClient should be changed to 1024
 #include <PubSubClient.h>
 
-#define DEBUG               true
+#define DEBUG               false
 #define IR_LED D3
 #define IR_PIN D4
 #define CAPTURE_BUFFER_SIZE 1024 //IR
