@@ -1,35 +1,45 @@
 //WiFi enabled MQTT hunidifier based on Wemos D1 mini and relay module.
 //v.2.0
+#include <EEPROM.h>
+
+#include <ESP8266WiFi.h>          //ESP8266 Core WiFi Library (you most likely already have this in your sketch)
+
+#include <DNSServer.h>            //Local DNS Server used for redirecting all requests to the configuration portal
+#include <ESP8266WebServer.h>     //Local WebServer used to serve the configuration portal
+#include <WiFiManager.h>  
 
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
 #define MQTT_CLIENT_NAME    "humidifier"
-#define DEBUG               true
+#define DEBUG               false
 
-const char* ssid = "XPEH";
-const char* pswd = "";
-const char* mqtt_server = "192.168.2.197";
-const char* mqtt_user = "";
-const char* mqtt_password = "";
-
-const char* topic = "edwin";
+const char* powerTopic = "edwin/humidifier/power";
+const char* stateTopic = "edwin/humidifier/state";
 
 const int relayPin = D1;
+const int switchPin = D5;
+
+String mqttServer = "";
+String mqttUser = "";
+String mqttPassword = "";
+
+bool shouldSaveConfig = false;
+
+int lastSwitchState = 0;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
 
 int status = WL_IDLE_STATUS;
 
-void setup_wifi() {
+void wait_for_wifi() {
   delay(10);
   if (DEBUG) {
     Serial.println();
-    Serial.print("Connecting to ");
-    Serial.println(ssid);
+    Serial.print("Checking WiFi connection");
+    Serial.println(".");
   }
-  WiFi.begin(ssid, pswd);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     if (DEBUG) Serial.print(".");
@@ -53,9 +63,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println();
   }
 
-  if ((char)payload[0] == '1') {
+  if ((char)payload[0] == '1' && digitalRead(switchPin) == HIGH) {
     digitalWrite(relayPin, HIGH);
-  } else {
+  } else if ((char)payload[0] == '0') {
     digitalWrite(relayPin, LOW);
   }
 
@@ -66,21 +76,24 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
 void reconnect() {
   while (!client.connected()) {
-    if (DEBUG) Serial.print("Attempting MQTT connection...");
+    if (DEBUG) {
+      Serial.print("Attempting MQTT connection to ");
+      Serial.print(mqttServer);
+      Serial.print(" ");
+      Serial.print(mqttUser);
+      Serial.print(" ");
+      Serial.print(mqttPassword);
+      Serial.print(" ... ");
+    }
 
-    if (client.connect(MQTT_CLIENT_NAME,mqtt_user,mqtt_password)) {
+    if (client.connect(MQTT_CLIENT_NAME,mqttUser.c_str(),mqttPassword.c_str())) {
       if (DEBUG) Serial.println("connected");
       delay(200);
       sendStatus();
-      String subscription;
-      subscription += topic;
-      subscription += "/";
-      subscription += MQTT_CLIENT_NAME;
-      subscription += "/power";
-      client.subscribe(subscription.c_str() );
+      client.subscribe(powerTopic);
       if (DEBUG) {
        Serial.print("subscribed to : ");
-       Serial.println(subscription);
+       Serial.println(powerTopic);
       }
     } else {
       if (DEBUG) {
@@ -95,11 +108,90 @@ void reconnect() {
   }
 }
 
+void saveConfigCallback() {
+  if (DEBUG) Serial.println("Should save config");
+  shouldSaveConfig = true;
+}
+
 void setup() {
-  pinMode(relayPin, OUTPUT); 
-  if (DEBUG) Serial.begin(115200);
-  setup_wifi();
-  client.setServer(mqtt_server, 1883);
+  pinMode(relayPin, OUTPUT);
+  pinMode(switchPin, INPUT); 
+  if (DEBUG) {
+    Serial.begin(115200);
+    Serial.println("Reading settings from EEPROM...");
+  }
+  EEPROM.begin(512);
+  int addr = 0;
+  for (int l = 0; l < 40; ++l) {
+    if (char(EEPROM.read(l)) != '|') {
+      mqttServer += char(EEPROM.read(l));
+    } else {
+      break;
+    }
+  }
+  addr = 40;
+  for (int l = 0; l < 20; ++l) {
+    if (char(EEPROM.read(addr+l)) != '|') {
+      mqttUser += char(EEPROM.read(addr+l));
+    } else {
+      break;
+    }
+  }
+  addr = 60;
+  for (int l = 0; l < 20; ++l) {
+    if (char(EEPROM.read(addr+l)) != '|') {
+      mqttPassword += char(EEPROM.read(addr+l));
+    } else {
+      break;
+    }
+  }
+  EEPROM.end();
+  
+  WiFiManager wifiManager;
+  WiFiManagerParameter custom_mqtt_server("server", "MQTT server", mqttServer.c_str(), 40);
+  WiFiManagerParameter custom_mqtt_user("user", "MQTT user", mqttUser.c_str(), 20);
+  WiFiManagerParameter custom_mqtt_password("password", "MQTT password", mqttPassword.c_str(), 20);
+  wifiManager.addParameter(&custom_mqtt_server);
+  wifiManager.addParameter(&custom_mqtt_user);
+  wifiManager.addParameter(&custom_mqtt_password);
+  wifiManager.setSaveConfigCallback(saveConfigCallback);
+  
+  wifiManager.autoConnect("Edwin-Humidifier", "00000008");
+  wait_for_wifi();
+  mqttServer = String(custom_mqtt_server.getValue());
+  mqttUser = String(custom_mqtt_user.getValue());
+  mqttPassword = String(custom_mqtt_password.getValue());
+  
+  if (shouldSaveConfig) {
+    if (DEBUG) {
+      Serial.print("Saving settings to EEPROM...");
+    }
+    EEPROM.begin(512);
+    int addr = 0;
+    for (int j = 0; j < mqttServer.length(); j++) { 
+      EEPROM.write(addr+j, mqttServer[j]);  
+    }
+    addr = mqttServer.length();
+    EEPROM.write(addr, '|');
+    addr = 40;
+    for (int j = 0; j < mqttUser.length(); j++) { 
+      EEPROM.write(addr+j, mqttUser[j]);  
+    }
+    addr = 40 + mqttUser.length();
+    EEPROM.write(addr, '|');
+    addr = 60;
+    for (int j = 0; j < mqttPassword.length(); j++) { 
+      EEPROM.write(addr+j, mqttPassword[j]);  
+    }
+    addr = 60 + mqttPassword.length();
+    EEPROM.write(addr, '|');
+    EEPROM.commit();
+    EEPROM.end();
+    if (DEBUG) {
+      Serial.println("Done.");
+    }
+  }
+  client.setServer(mqttServer.c_str(), 1883);
   client.setCallback(callback);
 }
 
@@ -111,18 +203,14 @@ void sendStatus() {
     } else {
       payload = "off";
     }
-    String pubTopic;
-     pubTopic += topic ;
-     pubTopic += "/";
-     pubTopic += MQTT_CLIENT_NAME;
-     pubTopic += "/state";
-     if (DEBUG) {
+    
+    if (DEBUG) {
       Serial.print("Publish topic: ");
-      Serial.println(pubTopic);
+      Serial.println(stateTopic);
       Serial.print("Publish message: ");
       Serial.println(payload);
-     }
-    client.publish( (char*) pubTopic.c_str() , (char*) payload.c_str(), true );
+    }
+    client.publish( stateTopic , (char*) payload.c_str(), true );
   }  
 }
 
@@ -130,8 +218,15 @@ void loop() {
   if (!client.connected()) {
     reconnect();
   }
-  if (DEBUG) {
-      Serial.print("+");
+  int currentSwitchState = digitalRead(switchPin);
+  if (lastSwitchState != currentSwitchState) {
+    lastSwitchState = currentSwitchState;
+    if (DEBUG) {
+      Serial.print("Changing relay state according to switch: ");
+      Serial.println(lastSwitchState);
+    }
+    digitalWrite(relayPin, lastSwitchState);
+    sendStatus();
   }
   client.loop();
 }
