@@ -1,5 +1,4 @@
 //WiFi enabled MQTT hunidifier based on Wemos D1 mini and relay module.
-//v.2.0
 #include <EEPROM.h>
 
 #include <ESP8266WiFi.h>          //ESP8266 Core WiFi Library (you most likely already have this in your sketch)
@@ -14,8 +13,12 @@
 #define MQTT_CLIENT_NAME    "humidifier"
 #define DEBUG               false
 
+const char* fwVersion = "v.2.1";
+
 const char* powerTopic = "edwin/humidifier/power";
 const char* stateTopic = "edwin/humidifier/state";
+const char* infoTopic = "edwin/humidifier/info";
+const char* availabilityTopic = "edwin/humidifier/availability";
 
 const int relayPin = D1;
 const int switchPin = D5;
@@ -63,7 +66,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println();
   }
 
-  if ((char)payload[0] == '1' && digitalRead(switchPin) == HIGH) {
+  if ((char)payload[0] == '1') {
     digitalWrite(relayPin, HIGH);
   } else if ((char)payload[0] == '0') {
     digitalWrite(relayPin, LOW);
@@ -86,7 +89,16 @@ void reconnect() {
       Serial.print(" ... ");
     }
 
-    if (client.connect(MQTT_CLIENT_NAME,mqttUser.c_str(),mqttPassword.c_str())) {
+    if (client.connect(
+          MQTT_CLIENT_NAME,
+          mqttUser.c_str(),
+          mqttPassword.c_str(),
+          availabilityTopic,
+          0,
+          1,
+          "offline"
+          )
+        ) {
       if (DEBUG) Serial.println("connected");
       delay(200);
       sendStatus();
@@ -197,20 +209,37 @@ void setup() {
 
 void sendStatus() {
   if (client.connected()) {
-    String payload = "";
+    client.publish( availabilityTopic , "online", true );
+    String relayStatePayload;
+    String switchStatePayload;
     if (digitalRead(relayPin) == HIGH) {
-      payload = "on";
+      relayStatePayload = "on";
     } else {
-      payload = "off";
+      relayStatePayload = "off";
     }
+    if (digitalRead(switchPin) == HIGH) {
+      switchStatePayload = "on";
+    } else {
+      switchStatePayload = "off";
+    }
+    String infoPayload = "{\"relayState\": \""
+      + relayStatePayload
+      + "\", \"switchState\": \""
+      + switchStatePayload
+      + "\", \"version\": \""
+      + fwVersion
+      + "\", \"ipAddress\": \""
+      + WiFi.localIP()[0] + "." + WiFi.localIP()[1]
+      + "." + WiFi.localIP()[2] + "." + WiFi.localIP()[3] +"\"}";
     
     if (DEBUG) {
       Serial.print("Publish topic: ");
       Serial.println(stateTopic);
       Serial.print("Publish message: ");
-      Serial.println(payload);
+      Serial.println(relayStatePayload);
     }
-    client.publish( stateTopic , (char*) payload.c_str(), true );
+    client.publish( stateTopic , relayStatePayload.c_str(), true );
+    client.publish( infoTopic , infoPayload.c_str(), true );
   }  
 }
 
@@ -222,10 +251,9 @@ void loop() {
   if (lastSwitchState != currentSwitchState) {
     lastSwitchState = currentSwitchState;
     if (DEBUG) {
-      Serial.print("Changing relay state according to switch: ");
+      Serial.print("Switch state changed to ");
       Serial.println(lastSwitchState);
     }
-    digitalWrite(relayPin, lastSwitchState);
     sendStatus();
   }
   client.loop();
