@@ -8,5 +8,9 @@
 
 ### Dependencies
 
-* ESP8266 Arduino board manager ([link](https://github.com/esp8266/Arduino))
-* WiFiManager
+* _ESP8266 Arduino board manager_ ([link](https://github.com/esp8266/Arduino)). Allows to develop and flash ESP8266-based boards with Arduino IDE. 
+* _WiFiManager for ESP8266 boards_ ([link](https://github.com/tzapu/WiFiManager)). Enables simple WiFi configuration for your projects. Allows to configure other custom parameters.
+* _PubSubClient_ library for MQTT support.
+* _EEPROM_ library for storing settings in EEPROM.
+
+[Building guide](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
