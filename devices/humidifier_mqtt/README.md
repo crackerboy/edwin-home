@@ -1,10 +1,11 @@
 # MQTT Humidifier
 
-### Hardware used
+### Components
 * Ballu UHB-200 air humidifier
 * LOLIN (Wemos) D1 mini ([wemos.cc](https://www.wemos.cc/en/latest/d1/d1_mini.html))
 * 5V Relay Brick by Itead ([itead.com](https://www.itead.cc/electronic-brick-5v-relay.html))
 * 12V to 5V DC converter
+* 10K ohm pull-down resistor
 
 ### Dependencies
 
