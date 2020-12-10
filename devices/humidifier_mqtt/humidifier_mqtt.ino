@@ -7,7 +7,6 @@
 #include <ESP8266WebServer.h>     //Local WebServer used to serve the configuration portal
 #include <WiFiManager.h>  
 
-#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 
 #define MQTT_CLIENT_NAME    "humidifier"
