@@ -1,4 +1,4 @@
-# MQTT IR remote built-in in TV
+# MQTT IR remote built-in in TV or any other IR-controlled device
 
 ### Components
 * LOLIN (Wemos) D1 mini ([wemos.cc](https://www.wemos.cc/en/latest/d1/d1_mini.html))
