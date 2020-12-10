@@ -5,7 +5,7 @@
 * LOLIN (Wemos) D1 mini IR Controller Shield ([wemos.cc](https://www.wemos.cc/en/latest/d1_mini_shield/ir.html))
 * AC-DC 220V to 5V Step-Down Mini Power Supply ([amazon](https://www.amazon.com/Hi-link-HLK-PM01-Step-Down-Intelligent-Household/dp/B01B7G6LYE))
 
-[MQTT-IR bridge](/devices/edwin_mqtt_ir_bridge) can be used to read IR codes from any remote and encode it in Base64.
+[MQTT IR bridge](/devices/edwin_mqtt_ir_bridge) can be used to read IR codes from any remote and encode it in Base64.
 
 ![](https://github.com/estevez-dev/edwin-home/raw/master/devices/ir_remote_mqtt/ir_remote_mqtt.png)
 
