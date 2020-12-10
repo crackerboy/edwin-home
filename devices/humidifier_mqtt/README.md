@@ -14,7 +14,9 @@
 * _PubSubClient_ library for MQTT support.
 * _EEPROM_ library for storing settings in EEPROM.
 
-### [Building guide](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
+### [Building guide on Some Techy Website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
+
+![](https://github.com/estevez-dev/edwin-home/raw/master/devices/humidifier_mqtt/humidifier_mqtt.png)
 
 ### Changelog
 **v.2.0**
