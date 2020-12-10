@@ -13,4 +13,10 @@
 * _PubSubClient_ library for MQTT support.
 * _EEPROM_ library for storing settings in EEPROM.
 
-[Building guide](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
+### [Building guide](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
+
+### Changelog
+**v.2.0**
+* Added OEM hardware switch support on D5 pin.
+* WiFiManager integrated with additional config enries for MQTT connection settings.
+* Write and read settings to/from EEPROM
