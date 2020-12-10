@@ -19,6 +19,10 @@
 ### [Building story on some techy website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
 
 ### Changelog
+**v.2.1**
+* Add availability information
+* Add info topic with switch state, version and IP address
+* Disable relay state to always be the same as switch state
 **v.2.0**
 * Added OEM hardware switch support on D5 pin
 * WiFiManager integrated with additional config enries for MQTT connection settings.
