@@ -17,6 +17,6 @@
 
 ### Changelog
 **v.2.0**
-* Added OEM hardware switch support on D5 pin.
+* Added OEM hardware switch support on D5 pin
 * WiFiManager integrated with additional config enries for MQTT connection settings.
 * Write and read settings to/from EEPROM
