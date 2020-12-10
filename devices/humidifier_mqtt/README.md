@@ -7,6 +7,8 @@
 * 12V to 5V DC converter
 * 10K ohm pull-down resistor
 
+![](https://github.com/estevez-dev/edwin-home/raw/master/devices/humidifier_mqtt/humidifier_mqtt.png)
+
 ### Dependencies
 
 * _ESP8266 Arduino board manager_ ([link](https://github.com/esp8266/Arduino)). Allows to develop and flash ESP8266-based boards with Arduino IDE. 
@@ -14,9 +16,7 @@
 * _PubSubClient_ library for MQTT support.
 * _EEPROM_ library for storing settings in EEPROM.
 
-### [Building guide on Some Techy Website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
-
-![](https://github.com/estevez-dev/edwin-home/raw/master/devices/humidifier_mqtt/humidifier_mqtt.png)
+### [Building story on some techy website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
 
 ### Changelog
 **v.2.0**
