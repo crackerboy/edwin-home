@@ -23,6 +23,7 @@
 * Add availability information
 * Add info topic with switch state, version and IP address
 * Disable relay state to always be the same as switch state
+
 **v.2.0**
 * Added OEM hardware switch support on D5 pin
 * WiFiManager integrated with additional config enries for MQTT connection settings.
