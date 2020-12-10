@@ -1,1 +1,4 @@
-# See [somegeeky.website](https://somegeeky.website) for some info
+# Edwin Home
+Various sketches used in my DIY smart devices.
+
+
