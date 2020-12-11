@@ -8,7 +8,7 @@ Controlls the power of Cambridge Audio AXA25 amplifier simulating short factory 
 * 5V Relay Brick by Itead ([itead.com](https://www.itead.cc/electronic-brick-5v-relay.html))
 * 12V to 5V DC converter
 * 10K ohm and 2.2K ohm pull-down resistors
-* ACS712 curret module
+* ACS712 curret sensor module
 
 ![](https://github.com/estevez-dev/edwin-home/raw/master/devices/amplifier_mqtt/amplifier_mqtt.png)
 
