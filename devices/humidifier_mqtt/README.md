@@ -1,5 +1,7 @@
 # MQTT Humidifier
 
+Controls factory ulatrasonic transducrer with relay. Takes power from 12V DC output found on factory board. Read the state of factory switch and sends it's state in info topic.
+
 ### Components
 * Ballu UHB-200 air humidifier
 * LOLIN (Wemos) D1 mini ([wemos.cc](https://www.wemos.cc/en/latest/d1/d1_mini.html))
