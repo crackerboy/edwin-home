@@ -1,3 +1,4 @@
+//v.1.0
 #include <EEPROM.h>
 
 #include <ESP8266WiFi.h>          //ESP8266 Core WiFi Library (you most likely already have this in your sketch)
@@ -8,20 +9,15 @@
 
 #include <PubSubClient.h>
 
-#include "ACS712.h"
-
 #define MQTT_CLIENT_NAME    "cambridge"
-#define DEBUG               true
-
-const char* fwVersion = "v.0.1";
+#define DEBUG               false
 
 const char* commandTopic = "edwin/cambridge/command";
 const char* stateTopic = "edwin/cambridge/state";
-const char* infoTopic = "edwin/cambridge/info";
 const char* availabilityTopic = "edwin/cambridge/availability";
 
 const int relayPin = D1;
-const int switchPin = D5;
+const int powerPin = D2;
 
 String mqttServer = "";
 String mqttUser = "";
@@ -29,9 +25,7 @@ String mqttPassword = "";
 
 bool shouldSaveConfig = false;
 
-int lastSwitchState = 0;
-
-ACS712 sensor(ACS712_30A, A0);
+int lastPowerState = 0;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -70,11 +64,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   if ((char)payload[0] == '1') {
     digitalWrite(relayPin, HIGH);
-    delay(500);
+    delay(300);
     digitalWrite(relayPin, LOW);
   } else if ((char)payload[0] == '0') {
     digitalWrite(relayPin, HIGH);
-    delay(500);
+    delay(300);
     digitalWrite(relayPin, LOW);
   }
 
@@ -132,10 +126,14 @@ void saveConfigCallback() {
 }
 
 void setup() {
-  pinMode(relayPin, OUTPUT);
-  pinMode(switchPin, INPUT); 
   if (DEBUG) {
     Serial.begin(115200);
+    //Serial.println("Reseting sensor");
+  }
+  //sensor.calibrate();
+  pinMode(relayPin, OUTPUT);
+  pinMode(powerPin, INPUT); 
+  if (DEBUG) {
     Serial.println("Reading settings from EEPROM...");
   }
   EEPROM.begin(512);
@@ -216,28 +214,19 @@ void setup() {
 void sendStatus() {
   if (client.connected()) {
     client.publish( availabilityTopic , "online", true );
-    String switchStatePayload;
-    if (digitalRead(switchPin) == HIGH) {
-      switchStatePayload = "on";
+    String powerStatePayload;
+    if (digitalRead(powerPin) == HIGH) {
+      powerStatePayload = "on";
     } else {
-      switchStatePayload = "off";
+      powerStatePayload = "off";
     }
-    String infoPayload = "{\"switchState\": \""
-      + switchStatePayload
-      + "\", \"version\": \""
-      + fwVersion
-      + "\", \"ipAddress\": \""
-      + WiFi.localIP()[0] + "." + WiFi.localIP()[1]
-      + "." + WiFi.localIP()[2] + "." + WiFi.localIP()[3] +"\"}";
-    
     if (DEBUG) {
       Serial.print("Publish topic: ");
       Serial.println(stateTopic);
       Serial.print("Publish message: ");
-      Serial.println(switchStatePayload);
+      Serial.println(powerStatePayload);
     }
-    client.publish( stateTopic , switchStatePayload.c_str(), true );
-    client.publish( infoTopic , infoPayload.c_str(), true );
+    client.publish( stateTopic , powerStatePayload.c_str(), true );
   }  
 }
 
@@ -245,15 +234,12 @@ void loop() {
   if (!client.connected()) {
     reconnect();
   }
-  float I = sensor.getCurrentDC();
-  if (DEBUG) Serial.println(String("I = ") + I + " A");
-  delay(1000); 
-  int currentSwitchState = digitalRead(switchPin);
-  if (lastSwitchState != currentSwitchState) {
-    lastSwitchState = currentSwitchState;
+  int currentPowerState = digitalRead(powerPin);
+  if (lastPowerState != currentPowerState) {
+    lastPowerState = currentPowerState;
     if (DEBUG) {
       Serial.print("Switch state changed to ");
-      Serial.println(lastSwitchState);
+      Serial.println(lastPowerState);
     }
     sendStatus();
   }
