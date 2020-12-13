@@ -6,7 +6,7 @@ Controlls the power of Cambridge Audio AXA25 amplifier simulating short factory 
 * Cambridge Audio AXA25
 * LOLIN (Wemos) D1 mini ([wemos.cc](https://www.wemos.cc/en/latest/d1/d1_mini.html))
 * 5V Relay Brick by Itead ([itead.com](https://www.itead.cc/electronic-brick-5v-relay.html))
-* 12V to 5V DC converter
+* AC-DC 220V to 5V Step-Down Mini Power Supply (amazon)
 
 ![](https://github.com/estevez-dev/edwin-home/raw/master/devices/amplifier_mqtt/amplifier_mqtt.png)
 
