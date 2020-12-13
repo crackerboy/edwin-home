@@ -1,5 +1,7 @@
 # Built-in MQTT IR remote
 
+Built-in into TV. Sends IR commands right to factory IR receiver. Detects 5V power on factory USB port to determine current TV state (on or off).
+
 ### Components
 * LOLIN (Wemos) D1 mini ([wemos.cc](https://www.wemos.cc/en/latest/d1/d1_mini.html))
 * LOLIN (Wemos) D1 mini IR Controller Shield ([wemos.cc](https://www.wemos.cc/en/latest/d1_mini_shield/ir.html))
