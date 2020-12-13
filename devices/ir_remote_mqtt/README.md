@@ -21,6 +21,8 @@ Built-in into TV. Sends IR commands right to factory IR receiver. Detects 5V pow
 * _EEPROM_ library for storing settings in EEPROM
 
 ### Changelog
+**v.3.1**
+* Add 5V curret detection on factory USB port
 **v.3.0**
 * WiFiManager integrated with additional config enries for MQTT connection settings.
 * Write and read settings to/from EEPROM
