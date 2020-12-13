@@ -1,12 +1,11 @@
 //Edwin MQTT IR remote
-//v.3.0
+//v.3.1
 #include <base64.hpp>
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
 #include <IRutils.h>
 #include <ESP8266WiFi.h>
-//MQTT_MAX_PACKET_SIZE in PubSubClient should be changed to 256
-#include <PubSubClient.h>
+#include <PubSubClient.h>  // Required version: 2.8.0 or higher
 #include <DNSServer.h>            //Local DNS Server used for redirecting all requests to the configuration portal
 #include <ESP8266WebServer.h>     //Local WebServer used to serve the configuration portal
 #include <WiFiManager.h>  
@@ -23,12 +22,18 @@
 
 const char* mqttClientName = "edwinir_tv1";
 const char* subscriptionIRCommands = "com/edwinir_tv1/ir";
+const char* stateTopic = "edwin/edwinir_tv1/state";
+const char* availabilityTopic = "edwin/edwinir_tv1/availability";
+
+const int powerPin = D2;
 
 String mqttServer = "";
 String mqttUser = "";
 String mqttPassword = "";
 
 bool shouldSaveConfig = false;
+
+int lastPowerState = 0;
 
 IRsend irsend(IR_LED);
 
@@ -105,9 +110,19 @@ void reconnect() {
   while (!client.connected()) {
     if (DEBUG) Serial.print("Attempting MQTT connection...");
 
-    if (client.connect(mqttClientName,mqttUser.c_str(),mqttPassword.c_str())) {
+    if (client.connect(
+          mqttClientName,
+          mqttUser.c_str(),
+          mqttPassword.c_str(),
+          availabilityTopic,
+          0,
+          1,
+          "offline"
+          )
+        ) {
       if (DEBUG) Serial.println("connected");
       delay(200);
+      sendStatus();
       client.subscribe(subscriptionIRCommands);
       if (DEBUG) {
        Serial.println("Subscribed to:");
@@ -132,6 +147,7 @@ void saveConfigCallback() {
 }
 
 void setup() {
+  pinMode(powerPin, INPUT);
   irsend.begin();
   if (DEBUG) Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
   EEPROM.begin(512);
@@ -210,9 +226,38 @@ void setup() {
   client.setCallback(callback);
 }
 
+void sendStatus() {
+  if (client.connected()) {
+    client.publish( availabilityTopic , "online", true );
+    String powerStatePayload;
+    if (digitalRead(powerPin) == HIGH) {
+      powerStatePayload = "on";
+    } else {
+      powerStatePayload = "off";
+    }
+    if (DEBUG) {
+      Serial.print("Publish topic: ");
+      Serial.println(stateTopic);
+      Serial.print("Publish message: ");
+      Serial.println(powerStatePayload);
+    }
+    client.publish( stateTopic , powerStatePayload.c_str(), true );
+  }  
+}
+
 void loop() {
   if (!client.connected()) {
     reconnect();
+  }
+
+  int currentPowerState = digitalRead(powerPin);
+  if (lastPowerState != currentPowerState) {
+    lastPowerState = currentPowerState;
+    if (DEBUG) {
+      Serial.print("Switch state changed to ");
+      Serial.println(lastPowerState);
+    }
+    sendStatus();
   }
 
   client.loop();
