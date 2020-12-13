@@ -9,7 +9,8 @@ Built-in into TV. Sends IR commands right to factory IR receiver. Detects 5V pow
 
 [MQTT IR bridge](/devices/edwin_mqtt_ir_bridge) can be used to read IR codes from any remote and encode it in Base64.
 
-![](https://github.com/estevez-dev/edwin-home/raw/master/devices/ir_remote_mqtt/ir_remote_mqtt.png)
+![](/devices/ir_remote_mqtt/ir_remote_mqtt.png)
+![](/devices/ir_remote_mqtt/positioning.png)
 
 ### Dependencies
 
