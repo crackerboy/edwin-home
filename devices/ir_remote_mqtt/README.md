@@ -22,6 +22,8 @@ Built-in into TV. Sends IR commands right to factory IR receiver. Detects 5V pow
 * _EEPROM_ library for storing settings in EEPROM
 
 ### Changelog
+**v.3.2**
+* Switch WiFi to STA mode
 **v.3.1**
 * Add 5V curret detection on factory USB port
 **v.3.0**
