@@ -12,7 +12,7 @@
 #define MQTT_CLIENT_NAME    "humidifier"
 #define DEBUG               false
 
-const char* fwVersion = "v.2.1";
+const char* fwVersion = "v.2.2";
 
 const char* powerTopic = "edwin/humidifier/power";
 const char* stateTopic = "edwin/humidifier/state";

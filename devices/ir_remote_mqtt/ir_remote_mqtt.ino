@@ -1,5 +1,5 @@
 //Edwin MQTT IR remote
-//v.3.1
+//v.3.2
 #include <base64.hpp>
 #include <IRremoteESP8266.h>
 #include <IRsend.h>
