@@ -16,3 +16,8 @@ Controlls the power of Cambridge Audio AXA25 amplifier simulating short factory 
 * _WiFiManager for ESP8266 boards_ ([link](https://github.com/tzapu/WiFiManager)). Enables simple WiFi configuration for your projects. Allows to configure other custom parameters
 * _PubSubClient_ library for MQTT support
 * _EEPROM_ library for storing settings in EEPROM
+
+### Changelog
+**v.1.1**
+- Switch WiFi to STA mode
+- Ignore tunr on command if factory USB is powered on
