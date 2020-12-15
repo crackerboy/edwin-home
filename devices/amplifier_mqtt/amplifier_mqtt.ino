@@ -1,4 +1,4 @@
-//v.1.0
+//v.1.1
 #include <EEPROM.h>
 
 #include <ESP8266WiFi.h>          //ESP8266 Core WiFi Library (you most likely already have this in your sketch)
@@ -62,11 +62,11 @@ void callback(char* topic, byte* payload, unsigned int length) {
     Serial.println();
   }
 
-  if ((char)payload[0] == '1') {
+  if ((char)payload[0] == '1' && digitalRead(powerPin) == LOW) {
     digitalWrite(relayPin, HIGH);
     delay(300);
     digitalWrite(relayPin, LOW);
-  } else if ((char)payload[0] == '0') {
+  } else if ((char)payload[0] == '0' && digitalRead(powerPin) == HIGH) {
     digitalWrite(relayPin, HIGH);
     delay(300);
     digitalWrite(relayPin, LOW);
@@ -130,6 +130,7 @@ void setup() {
     Serial.begin(115200);
     //Serial.println("Reseting sensor");
   }
+  WiFi.mode(WIFI_STA);
   //sensor.calibrate();
   pinMode(relayPin, OUTPUT);
   pinMode(powerPin, INPUT); 
