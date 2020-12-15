@@ -125,6 +125,7 @@ void saveConfigCallback() {
 }
 
 void setup() {
+  WiFi.mode(WIFI_STA);
   pinMode(relayPin, OUTPUT);
   pinMode(switchPin, INPUT); 
   if (DEBUG) {

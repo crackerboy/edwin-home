@@ -147,6 +147,7 @@ void saveConfigCallback() {
 }
 
 void setup() {
+  WiFi.mode(WIFI_STA);
   pinMode(powerPin, INPUT);
   irsend.begin();
   if (DEBUG) Serial.begin(115200, SERIAL_8N1, SERIAL_TX_ONLY);
