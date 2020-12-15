@@ -21,6 +21,9 @@ Controls factory ulatrasonic transducrer with relay. Takes power from 12V DC out
 ### [Building story on some techy website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
 
 ### Changelog
+**v.2.2**
+* Switch WiFI to STA mode
+
 **v.2.1**
 * Add availability information
 * Add info topic with switch state, version and IP address
