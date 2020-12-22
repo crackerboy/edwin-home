@@ -20,4 +20,4 @@ Controlls the power of Cambridge Audio AXA25 amplifier simulating short factory 
 ### Changelog
 **v.1.1**
 - Switch WiFi to STA mode
-- Ignore tunr on command if factory USB is powered on
+- Ignore "turn on" command if factory USB is powered on
