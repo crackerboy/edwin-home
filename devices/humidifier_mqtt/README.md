@@ -2,6 +2,8 @@
 
 Controls factory ulatrasonic transducrer with relay. Takes power from 12V DC output found on factory board. Read the state of factory switch and sends it's state in info topic.
 
+### [Building story on some techy website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
+
 ### Components
 * Ballu UHB-200 air humidifier
 * LOLIN (Wemos) D1 mini ([wemos.cc](https://www.wemos.cc/en/latest/d1/d1_mini.html))
@@ -17,8 +19,6 @@ Controls factory ulatrasonic transducrer with relay. Takes power from 12V DC out
 * _WiFiManager for ESP8266 boards_ ([link](https://github.com/tzapu/WiFiManager)). Enables simple WiFi configuration for your projects. Allows to configure other custom parameters.
 * _PubSubClient_ library for MQTT support.
 * _EEPROM_ library for storing settings in EEPROM.
-
-### [Building story on some techy website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
 
 #### ESPHome
 See [esphome_config.yaml](/devices/humidifier_mqtt/esphome_config.yaml) for ESPHome config.
