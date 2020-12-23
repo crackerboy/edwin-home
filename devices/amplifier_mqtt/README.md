@@ -2,6 +2,8 @@
 
 Controlls the power of Cambridge Audio AXA25 amplifier simulating short factory button click with relay. Detects the state of amplifier by detecting the curret on factory USB port.
 
+### [Buld story on some techy website](https://sometechy.website/diy-smart-appliance-adding-wifi-to-common-sound-amplifier)
+
 ### Components
 * Cambridge Audio AXA25
 * LOLIN (Wemos) D1 mini ([wemos.cc](https://www.wemos.cc/en/latest/d1/d1_mini.html))
