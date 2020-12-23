@@ -20,7 +20,13 @@ Controls factory ulatrasonic transducrer with relay. Takes power from 12V DC out
 
 ### [Building story on some techy website](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one)
 
+#### ESPHome
+See [esphome_config.yaml](/devices/humidifier_mqtt/esphome_config.yaml) for ESPHome config.
+
 ### Changelog
+**v.3.0**
+* Migrated to ESPHome
+
 **v.2.2**
 * Switch WiFI to STA mode
 
