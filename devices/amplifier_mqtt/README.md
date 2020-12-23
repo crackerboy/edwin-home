@@ -17,7 +17,13 @@ Controlls the power of Cambridge Audio AXA25 amplifier simulating short factory 
 * _PubSubClient_ library for MQTT support
 * _EEPROM_ library for storing settings in EEPROM
 
+### ESPHome
+See [amplifier.yaml](/devices/amplifier_mqtt/amplifier.yaml) for ESPHome config.
+
 ### Changelog
+**v.2.0**
+- Migrated to ESPHome
+
 **v.1.1**
 - Switch WiFi to STA mode
 - Ignore "turn on" command if factory USB is powered on
