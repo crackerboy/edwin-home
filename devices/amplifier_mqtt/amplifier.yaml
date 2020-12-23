@@ -1,0 +1,63 @@
+esphome:
+  name: amplifier
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "****"
+  password: "**************"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Cambridge AXA25"
+    password: "*******"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "******"
+
+ota:
+  password: "******"
+
+binary_sensor:
+  - platform: gpio
+    id: amplifier_power
+    name: "Amplifier Power"
+    pin:
+      number: D2
+      mode: INPUT_PULLDOWN_16
+    on_state:
+      then:
+      - switch.template.publish:
+          id: amplifier
+          state: !lambda 'return x;'
+
+switch:
+  - platform: gpio
+    id: relay
+    pin: D1
+    restore_mode: ALWAYS_OFF
+  - platform: template
+    name: "Amplifier"
+    id: amplifier
+    turn_on_action:
+      - if:
+          condition:
+            binary_sensor.is_off: amplifier_power
+          then:
+          - switch.turn_on: relay
+          - delay: 300ms
+          - switch.turn_off: relay
+    turn_off_action:
+      - if:
+          condition:
+            binary_sensor.is_on: amplifier_power
+          then:
+          - switch.turn_on: relay
+          - delay: 300ms
+          - switch.turn_off: relay
