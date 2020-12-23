@@ -1,0 +1,38 @@
+esphome:
+  name: humidifier
+  platform: ESP8266
+  board: d1_mini
+
+wifi:
+  ssid: "*****"
+  password: "********"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Edwin Humidifier"
+    password: "********"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "********"
+
+ota:
+  password: "********"
+
+switch:
+  - platform: gpio
+    name: "Humidifier"
+    pin: D1
+    restore_mode: ALWAYS_OFF
+    
+binary_sensor:
+  - platform: gpio
+    name: "Humidifier state"
+    pin:
+      number: D5
+      mode: INPUT
