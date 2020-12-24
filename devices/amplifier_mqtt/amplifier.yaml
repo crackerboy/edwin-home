@@ -27,15 +27,10 @@ ota:
 binary_sensor:
   - platform: gpio
     id: amplifier_power
-    name: "Amplifier Power"
+    internal: true
     pin:
       number: D2
       mode: INPUT_PULLDOWN_16
-    on_state:
-      then:
-      - switch.template.publish:
-          id: amplifier
-          state: !lambda 'return x;'
 
 switch:
   - platform: gpio
@@ -45,6 +40,12 @@ switch:
   - platform: template
     name: "Amplifier"
     id: amplifier
+    lambda: |-
+      if (id(amplifier_power).state) {
+        return true;
+      } else {
+        return false;
+      }
     turn_on_action:
       - if:
           condition:
