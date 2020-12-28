@@ -12,4 +12,4 @@ Controlls the power of Cambridge Audio AXA25 amplifier simulating short factory 
 * _EEPROM_ library for storing settings in EEPROM
 
 ### ESPHome
-See [bulding guide](/devices/amplifier_mqtt/amplifier.yaml) for ESPHome config.
+See [bulding guide](https://sometechy.website/diy-smart-appliance-adding-wifi-to-common-sound-amplifier) for ESPHome config.
