@@ -11,8 +11,6 @@ Controls factory ulatrasonic transducrer with relay. Takes power from 12V DC out
 * 12V to 5V DC converter
 * 10K ohm pull-down resistor
 
-![](https://github.com/estevez-dev/edwin-home/raw/master/devices/humidifier_mqtt/humidifier_mqtt.png)
-
 ### Dependencies
 
 * _ESP8266 Arduino board manager_ ([link](https://github.com/esp8266/Arduino)). Allows to develop and flash ESP8266-based boards with Arduino IDE. 
@@ -21,21 +19,4 @@ Controls factory ulatrasonic transducrer with relay. Takes power from 12V DC out
 * _EEPROM_ library for storing settings in EEPROM.
 
 #### ESPHome
-See [esphome_config.yaml](/devices/humidifier_mqtt/esphome_config.yaml) for ESPHome config.
-
-### Changelog
-**v.3.0**
-* Migrated to ESPHome
-
-**v.2.2**
-* Switch WiFI to STA mode
-
-**v.2.1**
-* Add availability information
-* Add info topic with switch state, version and IP address
-* Disable relay state to always be the same as switch state
-
-**v.2.0**
-* Added OEM hardware switch support on D5 pin
-* WiFiManager integrated with additional config enries for MQTT connection settings.
-* Write and read settings to/from EEPROM
+See [the story](https://sometechy.website/how-to-make-wifi-enabled-smart-humidifier-from-a-regular-one) for more info.
